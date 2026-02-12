@@ -15,11 +15,11 @@ class SimpleUpload
      *
      * @param UploadedFile|null $file The file from the request.
      * @param string $folder Destination folder.
-     * @param string|null $disk Disk name (s3, local). If null, uses default from config.
      * @param string|null $customName Custom filename (without extension).
+     * @param string|null $disk Disk name (s3, local). If null, uses default from config.
      * @return string|false The file path or false on failure.
      */
-    public function upload(?UploadedFile $file, string $folder = 'uploads', ?string $disk = null, ?string $customName = null): string|false
+    public function upload(?UploadedFile $file, string $folder = 'uploads', ?string $customName = null, ?string $disk = null): string|false
     {
         if (!$file instanceof UploadedFile) {
             return false;
@@ -55,7 +55,7 @@ class SimpleUpload
         // Slugify the name to avoid special characters and spaces (S3 friendly)
         $safeName = Str::slug($name);
 
-        return $this->upload($file, $folder, $disk, $safeName);
+        return $this->upload($file, $folder, $safeName, $disk);
     }
 
     /**
@@ -74,7 +74,7 @@ class SimpleUpload
         $this->delete($currentPath, $disk);
 
         // Upload the new file
-        return $this->upload($newFile, $folder, $disk);
+        return $this->upload($newFile, $folder, null, $disk);
     }
 
     /**
